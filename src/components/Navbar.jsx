@@ -10,6 +10,7 @@ const Navbar = () => {
           CyberMart
         </Link>
 
+        <div className="nav-spacer"></div>
         <div className="nav-links">
           <Link to="/" className="nav-link">
             Home
