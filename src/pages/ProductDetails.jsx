@@ -13,6 +13,7 @@ const ProductDetails = () => {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [buyingNow, setBuyingNow] = useState(false);
   const [addedMessage, setAddedMessage] = useState("");
 
   useEffect(() => {
@@ -50,6 +51,23 @@ const ProductDetails = () => {
     }
   };
 
+  const handleBuyNow = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    setBuyingNow(true);
+    try {
+      await addToCart(product._id, quantity);
+      // Navigate directly to cart page
+      navigate("/cart");
+    } catch (err) {
+      console.error("Failed to process buy now", err);
+      setBuyingNow(false);
+    }
+  };
+
   if (loading) return <div className="loading">Loading product...</div>;
   if (error) return <div className="error">{error}</div>;
   if (!product) return <div className="error">Product not found</div>;
@@ -68,7 +86,7 @@ const ProductDetails = () => {
         <div className="product-info-section">
           <h1>{product.name}</h1>
           <p className="product-category">{product.category}</p>
-          <p className="product-price">${product.price}</p>
+          <p className="product-price">${product.price.toFixed(2)}</p>
 
           <div className="product-description">
             <h3>Description</h3>
@@ -84,7 +102,7 @@ const ProductDetails = () => {
           </div>
 
           {product.inStock && (
-            <div className="add-to-cart-section">
+            <>
               <div className="quantity-selector">
                 <label htmlFor="quantity">Quantity:</label>
                 <div className="quantity-controls">
@@ -93,7 +111,7 @@ const ProductDetails = () => {
                     className="quantity-btn"
                     disabled={quantity <= 1}
                   >
-                    -
+                    −
                   </button>
                   <input
                     type="number"
@@ -113,18 +131,28 @@ const ProductDetails = () => {
                 </div>
               </div>
 
-              <button
-                onClick={handleAddToCart}
-                disabled={addingToCart}
-                className="add-to-cart-btn"
-              >
-                {addingToCart ? "Adding..." : "Add to Cart"}
-              </button>
+              <div className="action-buttons">
+                <button
+                  onClick={handleAddToCart}
+                  disabled={addingToCart || buyingNow}
+                  className="add-to-cart-btn"
+                >
+                  {addingToCart ? "Adding..." : "Add to Cart"}
+                </button>
+
+                <button
+                  onClick={handleBuyNow}
+                  disabled={buyingNow || addingToCart}
+                  className="buy-now-btn"
+                >
+                  {buyingNow ? "Processing..." : "Buy Now"}
+                </button>
+              </div>
 
               {addedMessage && (
                 <div className="success-message">{addedMessage}</div>
               )}
-            </div>
+            </>
           )}
         </div>
       </div>
