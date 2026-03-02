@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getCart,
   updateCartItem,
   removeCartItem,
   clearCart,
+  createOrder,
 } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import "./CartPage.css";
@@ -14,9 +15,11 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updating, setUpdating] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  // Define fetchCart with useCallback so it can be used in multiple places
+  // Define fetchCart with useCallback so it can be reusable
   const fetchCart = useCallback(async () => {
     try {
       setLoading(true);
@@ -30,6 +33,46 @@ const CartPage = () => {
       setLoading(false);
     }
   }, []);
+
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    // shipping address sample
+    const shippingAddress = {
+      street: "123 Main St",
+      city: "Boston",
+      state: "MA",
+      zipCode: "02101",
+      country: "USA",
+    };
+
+    const paymentMethod = "credit_card";
+
+    setCheckoutLoading(true);
+    try {
+      await createOrder({
+        shippingAddress,
+        paymentMethod,
+      });
+
+      // Clear cart locally after successful order
+      setCart((prevCart) => ({ ...prevCart, items: [] }));
+
+      // Show success message
+      alert("Order placed successfully!");
+
+      // Navigate to orders page
+      navigate("/orders");
+    } catch (err) {
+      console.error("Checkout failed:", err);
+      alert("Failed to place order. Please try again.");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
 
   // Fetch cart when component mounts OR when page gains focus
   useEffect(() => {
@@ -122,7 +165,7 @@ const CartPage = () => {
     <div className="cart-page">
       <h1>Shopping Cart</h1>
 
-      {!cart.items || cart.items.length === 0 ? (
+      {!cart?.items || cart.items.length === 0 ? (
         <div className="empty-cart">
           <p>Your cart is empty</p>
           <Link to="/" className="continue-shopping-btn">
@@ -207,8 +250,7 @@ const CartPage = () => {
 
           <div className="cart-summary">
             <div className="summary-row">
-              <span>Subtotal ({cart.items.length} items):</span>{" "}
-              {/* Show item count */}
+              <span>Subtotal ({cart.items.length} items):</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
             <div className="summary-row">
@@ -229,13 +271,13 @@ const CartPage = () => {
                 Clear Cart
               </button>
               <button
-                onClick={() => {
-                  /* Checkout */
-                }}
-                disabled={updating || cart.items.length === 0}
+                onClick={handleCheckout}
+                disabled={
+                  checkoutLoading || updating || cart.items.length === 0
+                }
                 className="checkout-btn"
               >
-                Proceed to Checkout
+                {checkoutLoading ? "Processing..." : "Proceed to Checkout"}
               </button>
             </div>
 

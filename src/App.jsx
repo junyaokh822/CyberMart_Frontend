@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProductDetails from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage";
+import OrderHistory from "./pages/OrderHistory";
 import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
 
@@ -34,7 +35,7 @@ function App() {
             path="/orders"
             element={
               <PrivateRoute>
-                <div>Orders Page (in progress)</div>
+                <OrderHistory />
               </PrivateRoute>
             }
           />
