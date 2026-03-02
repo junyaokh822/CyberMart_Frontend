@@ -85,6 +85,8 @@
   font-weight: 500;
   transition: opacity 0.2s ease;
   margin-top: auto;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .product-card .view-btn:hover {

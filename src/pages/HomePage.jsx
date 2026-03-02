@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getProducts } from "../services/api";
 import "./HomePage.css";
 
@@ -35,7 +36,9 @@ const HomePage = () => {
             <img src={product.imageUrl} alt={product.name} />
             <h3>{product.name}</h3>
             <p className="price">${product.price}</p>
-            <button className="view-btn">View Details</button>
+            <Link to={`/product/${product._id}`} className="view-btn">
+              View Details
+            </Link>
           </div>
         ))}
       </div>
