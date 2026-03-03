@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getOrders } from "../services/api";
+import { getOrders, cancelOrder } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import "./OrderHistory.css";
 
@@ -9,6 +9,7 @@ const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [cancellingId, setCancellingId] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -19,12 +20,45 @@ const OrderHistory = () => {
     try {
       setLoading(true);
       const { data } = await getOrders();
-      setOrders(data);
+      // Sort orders by date (newest first)
+      const sortedOrders = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      );
+      setOrders(sortedOrders);
+      setError(null);
     } catch (err) {
       setError("Failed to load orders");
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm("Are you sure you want to cancel this order?")) {
+      return;
+    }
+
+    setCancellingId(orderId);
+    try {
+      await cancelOrder(orderId);
+
+      // Update the local state to reflect cancelled status
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: "cancelled" } : order,
+        ),
+      );
+
+      alert("Order cancelled successfully!");
+    } catch (err) {
+      console.error("Failed to cancel order:", err);
+      alert(
+        err.response?.data?.error ||
+          "Failed to cancel order. Please try again.",
+      );
+    } finally {
+      setCancellingId(null);
     }
   };
 
@@ -50,7 +84,13 @@ const OrderHistory = () => {
   };
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -155,12 +195,13 @@ const OrderHistory = () => {
                   {order.status === "pending" && (
                     <div className="order-actions">
                       <button
-                        onClick={() => {
-                          /* Cancel order */
-                        }}
+                        onClick={() => handleCancelOrder(order._id)}
+                        disabled={cancellingId === order._id}
                         className="cancel-order-btn"
                       >
-                        Cancel Order
+                        {cancellingId === order._id
+                          ? "Cancelling..."
+                          : "Cancel Order"}
                       </button>
                     </div>
                   )}
