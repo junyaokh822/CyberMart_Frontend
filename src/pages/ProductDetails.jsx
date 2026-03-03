@@ -90,7 +90,9 @@ const ProductDetails = () => {
 
           <div className="product-description">
             <h3>Description</h3>
-            <p>{product.description}</p>
+            <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.6" }}>
+              {product.description}
+            </p>
           </div>
 
           <div className="product-stock">

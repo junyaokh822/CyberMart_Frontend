@@ -79,6 +79,8 @@
 .product-description p {
   color: #666;
   line-height: 1.6;
+  white-space: pre-wrap;
+  font-family: inherit;
 }
 
 .product-stock {
