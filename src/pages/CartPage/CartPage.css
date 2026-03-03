@@ -67,10 +67,30 @@
   object-fit: contain;
 }
 
+.item-image a {
+  display: block;
+  cursor: pointer;
+}
+
+.item-image a:hover img {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
 .item-details h3 {
   font-size: 1rem;
   color: #333;
   margin-bottom: 5px;
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-link:hover h3 {
+  color: #667eea;
+  text-decoration: underline;
 }
 
 .item-price {
@@ -78,7 +98,6 @@
   font-weight: 600;
 }
 
-/* Quantity section */
 .item-quantity {
   display: flex;
   flex-direction: column;
@@ -120,8 +139,6 @@
 .quantity-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #e0e0e0;
-  color: #999;
 }
 
 .quantity-value {
@@ -166,11 +183,6 @@
 .remove-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.remove-btn svg {
-  width: 18px;
-  height: 18px;
 }
 
 .cart-summary {
@@ -255,7 +267,6 @@
   text-decoration: underline;
 }
 
-/* Loading and error states */
 .loading,
 .error {
   text-align: center;
@@ -268,7 +279,6 @@
   color: #ef4444;
 }
 
-/* Mobile responsive */
 @media (max-width: 768px) {
   .cart-item {
     grid-template-columns: 80px 1fr 40px;
@@ -309,71 +319,4 @@
   .cart-actions {
     flex-direction: column;
   }
-
-  .quantity-controls {
-    width: fit-content;
-  }
-}
-
-/* Small mobile devices */
-@media (max-width: 480px) {
-  .cart-page h1 {
-    font-size: 2rem;
-  }
-
-  .cart-item {
-    grid-template-columns: 60px 1fr 40px;
-    padding: 12px;
-  }
-
-  .item-image img {
-    height: 60px;
-  }
-
-  .item-details h3 {
-    font-size: 0.9rem;
-  }
-
-  .quantity-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 1rem;
-  }
-
-  .quantity-value {
-    font-size: 1rem;
-    min-width: 25px;
-  }
-
-  .cart-summary {
-    padding: 20px;
-  }
-}
-
-/* Make the product image clickable */
-.item-image a {
-  display: block;
-  cursor: pointer;
-}
-
-.item-image a:hover img {
-  transform: scale(1.05);
-  transition: transform 0.2s;
-}
-
-/* Style the product name link */
-.product-link {
-  text-decoration: none;
-  color: inherit;
-  display: inline-block;
-}
-
-.product-link:hover h3 {
-  color: #667eea;
-  text-decoration: underline;
-}
-
-.product-link h3 {
-  transition: color 0.2s;
-  margin-bottom: 5px;
 }
