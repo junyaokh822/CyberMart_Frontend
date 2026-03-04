@@ -7,7 +7,9 @@ import Register from "./pages/Register";
 import ProductDetails from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage";
 import OrderHistory from "./pages/OrderHistory";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
 import "./App.css";
 
 function App() {
@@ -40,12 +42,13 @@ function App() {
             }
           />
 
+          {/* Admin Routes */}
           <Route
             path="/admin"
             element={
-              <PrivateRoute>
-                <div>Admin Dashboard (in progress)</div>
-              </PrivateRoute>
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
             }
           />
         </Routes>
