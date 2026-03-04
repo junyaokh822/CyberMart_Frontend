@@ -28,6 +28,9 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
+              <Link to="/profile" className="nav-link">
+                Profile
+              </Link>
               <Link to="/cart" className="nav-link">
                 Cart
               </Link>

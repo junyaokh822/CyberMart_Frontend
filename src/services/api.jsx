@@ -17,6 +17,9 @@ API.interceptors.request.use((req) => {
 export const login = (formData) => API.post("/auth/login", formData);
 export const register = (formData) => API.post("/auth/register", formData);
 export const getProfile = () => API.get("/auth/profile");
+export const updateProfile = (userData) => API.put("/auth/profile", userData);
+export const changePassword = (passwordData) =>
+  API.put("/auth/password", passwordData);
 
 // Products
 export const getProducts = () => API.get("/products");

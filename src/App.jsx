@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import ProductDetails from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage";
 import OrderHistory from "./pages/OrderHistory";
+import ProfilePage from "./pages/ProfilePage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -24,6 +25,15 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
 
           {/* Protected Routes */}
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+
           <Route
             path="/cart"
             element={
