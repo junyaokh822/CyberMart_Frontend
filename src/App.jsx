@@ -8,6 +8,7 @@ import ProductDetails from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage";
 import OrderHistory from "./pages/OrderHistory";
 import ProfilePage from "./pages/ProfilePage";
+import WishlistPage from "./pages/WishlistPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -30,6 +31,15 @@ function App() {
             element={
               <PrivateRoute>
                 <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/wishlist"
+            element={
+              <PrivateRoute>
+                <WishlistPage />
               </PrivateRoute>
             }
           />
