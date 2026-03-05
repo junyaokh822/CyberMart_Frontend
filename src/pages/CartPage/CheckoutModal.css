@@ -151,6 +151,7 @@
   accent-color: #667eea;
 }
 
+/* Order Summary in Modal */
 .order-summary-modal {
   background: linear-gradient(135deg, #f8f9fa 0%, #f0f4ff 100%);
   padding: 20px;
@@ -159,11 +160,22 @@
   border: 2px solid #e0e0e0;
 }
 
+.order-summary-modal h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 .order-summary-modal .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #555;
+  font-size: 1rem;
+  padding: 5px 0;
 }
 
 .order-summary-modal .summary-row.total {
@@ -171,10 +183,14 @@
   font-weight: bold;
   color: #333;
   border-top: 2px solid #ddd;
-  padding-top: 10px;
-  margin-top: 10px;
+  padding-top: 12px;
+  margin-top: 8px;
 }
 
+.order-summary-modal .summary-row.total span:last-child {
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
 .modal-actions {
   display: flex;
   gap: 15px;
