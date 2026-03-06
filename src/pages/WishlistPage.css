@@ -47,6 +47,27 @@
   transform: translateY(-2px);
 }
 
+/* Unavailable notice banner at top */
+.unavailable-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff8e1;
+  border: 1px solid #f9a825;
+  border-left: 4px solid #f9a825;
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  color: #7a5c00;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.notice-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
 .wishlist-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -69,6 +90,34 @@
 .wishlist-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Unavailable card state */
+.wishlist-item.unavailable {
+  background: #fafafa;
+  border: 1px dashed #ddd;
+  box-shadow: none;
+}
+
+.wishlist-item.unavailable:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Unavailable overlay banner inside card */
+.unavailable-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(229, 62, 62, 0.88);
+  color: white;
+  text-align: center;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0;
+  letter-spacing: 0.3px;
 }
 
 .wishlist-item .remove-btn {
@@ -102,12 +151,12 @@
 }
 
 .wishlist-item .item-image {
-  cursor: pointer;
   margin-bottom: 15px;
   height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
 }
 
 .wishlist-item .item-image img {
@@ -117,7 +166,7 @@
   transition: transform 0.2s;
 }
 
-.wishlist-item .item-image:hover img {
+.wishlist-item:not(.unavailable) .item-image:hover img {
   transform: scale(1.05);
 }
 
@@ -168,6 +217,30 @@
 }
 
 .wishlist-item .add-to-cart-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Remove button shown in place of Add to Cart for unavailable items */
+.remove-from-wishlist-btn {
+  width: 100%;
+  padding: 10px;
+  background: white;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto;
+}
+
+.remove-from-wishlist-btn:hover:not(:disabled) {
+  background: #ef4444;
+  color: white;
+}
+
+.remove-from-wishlist-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

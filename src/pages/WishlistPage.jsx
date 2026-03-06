@@ -27,11 +27,11 @@ const WishlistPage = () => {
     }
   };
 
-  const handleRemove = async (productId) => {
+  const handleRemove = async (id) => {
     setUpdating(true);
     try {
-      await removeFromWishlist(productId);
-      await fetchWishlist(); // Refresh wishlist
+      await removeFromWishlist(id);
+      await fetchWishlist();
     } catch (err) {
       console.error("Failed to remove item", err);
     } finally {
@@ -54,6 +54,19 @@ const WishlistPage = () => {
   if (loading) return <div className="loading">Loading wishlist...</div>;
   if (error) return <div className="error">{error}</div>;
 
+  const availableItems =
+    wishlist?.items?.filter(
+      (item) =>
+        item.productId?._id ||
+        (item.productId && typeof item.productId === "string"),
+    ) ?? [];
+  const unavailableItems =
+    wishlist?.items?.filter(
+      (item) =>
+        !item.productId?._id &&
+        !(item.productId && typeof item.productId === "string"),
+    ) ?? [];
+
   return (
     <div className="wishlist-page">
       <h1>My Wishlist</h1>
@@ -72,44 +85,100 @@ const WishlistPage = () => {
             {wishlist.items.length === 1 ? "item" : "items"} in your wishlist
           </div>
 
+          {/* Unavailable items notice */}
+          {unavailableItems.length > 0 && (
+            <div className="unavailable-notice">
+              <span className="notice-icon">⚠️</span>
+              <span>
+                {unavailableItems.length}{" "}
+                {unavailableItems.length === 1 ? "item" : "items"} in your
+                wishlist {unavailableItems.length === 1 ? "is" : "are"} no
+                longer available. You can remove{" "}
+                {unavailableItems.length === 1 ? "it" : "them"} from your
+                wishlist.
+              </span>
+            </div>
+          )}
+
           <div className="wishlist-grid">
-            {wishlist.items.map((item) => (
-              <div key={item._id} className="wishlist-item">
-                <button
-                  onClick={() =>
-                    handleRemove(item.productId._id || item.productId)
-                  }
-                  className="remove-btn"
-                  disabled={updating}
-                  title="Remove from wishlist"
-                >
-                  ×
-                </button>
+            {wishlist.items.map((item) => {
+              const productId =
+                item.productId?._id ||
+                (typeof item.productId === "string" ? item.productId : null);
+              const removeId = productId || item._id;
+              const isUnavailable = !productId;
 
+              return (
                 <div
-                  className="item-image"
-                  onClick={() =>
-                    navigate(`/product/${item.productId._id || item.productId}`)
-                  }
+                  key={item._id}
+                  className={`wishlist-item ${isUnavailable ? "unavailable" : ""}`}
                 >
-                  <img src={item.imageUrl} alt={item.name} />
+                  {/* Unavailable overlay banner */}
+                  {isUnavailable && (
+                    <div className="unavailable-banner">
+                      <span>⚠ No Longer Available</span>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => handleRemove(removeId)}
+                    className="remove-btn"
+                    disabled={updating}
+                    title="Remove from wishlist"
+                  >
+                    ×
+                  </button>
+
+                  <div
+                    className="item-image"
+                    onClick={() =>
+                      !isUnavailable && navigate(`/product/${productId}`)
+                    }
+                    style={{ cursor: isUnavailable ? "default" : "pointer" }}
+                  >
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      style={{ opacity: isUnavailable ? 0.4 : 1 }}
+                    />
+                  </div>
+
+                  <h3 style={{ opacity: isUnavailable ? 0.5 : 1 }}>
+                    {item.name}
+                  </h3>
+                  <p
+                    className="item-price"
+                    style={{ opacity: isUnavailable ? 0.5 : 1 }}
+                  >
+                    ${item.price.toFixed(2)}
+                  </p>
+                  <p
+                    className="item-category"
+                    style={{ opacity: isUnavailable ? 0.5 : 1 }}
+                  >
+                    {item.category}
+                  </p>
+
+                  {isUnavailable ? (
+                    <button
+                      onClick={() => handleRemove(removeId)}
+                      disabled={updating}
+                      className="remove-from-wishlist-btn"
+                    >
+                      Remove from Wishlist
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleAddToCart(productId)}
+                      disabled={updating}
+                      className="add-to-cart-btn"
+                    >
+                      Add to Cart
+                    </button>
+                  )}
                 </div>
-
-                <h3>{item.name}</h3>
-                <p className="item-price">${item.price.toFixed(2)}</p>
-                <p className="item-category">{item.category}</p>
-
-                <button
-                  onClick={() =>
-                    handleAddToCart(item.productId._id || item.productId)
-                  }
-                  disabled={updating}
-                  className="add-to-cart-btn"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       )}
