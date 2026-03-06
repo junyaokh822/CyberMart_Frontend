@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://cybermart-backend.onrender.com/api",
 });
 
 // Add token to requests if it exists
