@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getProduct, addToCart } from "../services/api";
+import {
+  getProductReviews,
+  createReview,
+  updateReview,
+  deleteReview,
+  checkCanReview,
+} from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import StarRating from "../components/StarRating";
+import ReviewModal from "../components/ReviewModal";
+import ReviewList from "../components/ReviewList";
 import "./ProductDetails.css";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,9 +26,25 @@ const ProductDetails = () => {
   const [buyingNow, setBuyingNow] = useState(false);
   const [addedMessage, setAddedMessage] = useState("");
 
+  // Review states
+  const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
+  const [canReview, setCanReview] = useState(false);
+  const [hasPurchased, setHasPurchased] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
   useEffect(() => {
     fetchProduct();
+    fetchReviews();
   }, [id]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      checkReviewEligibility();
+    }
+  }, [id, isAuthenticated]);
 
   const fetchProduct = async () => {
     try {
@@ -30,6 +56,30 @@ const ProductDetails = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const { data } = await getProductReviews(id);
+      setReviews(data.reviews);
+      setAverageRating(data.averageRating);
+      setTotalReviews(data.totalReviews);
+    } catch (err) {
+      console.error("Failed to load reviews", err);
+    }
+  };
+
+  const checkReviewEligibility = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      const { data } = await checkCanReview(id);
+      setCanReview(data.canReview);
+      setHasPurchased(data.hasPurchased);
+      setHasReviewed(data.hasReviewed);
+    } catch (err) {
+      console.error("Failed to check review eligibility", err);
     }
   };
 
@@ -60,11 +110,32 @@ const ProductDetails = () => {
     setBuyingNow(true);
     try {
       await addToCart(product._id, quantity);
-      // Navigate directly to cart page
       navigate("/cart");
     } catch (err) {
       console.error("Failed to process buy now", err);
       setBuyingNow(false);
+    }
+  };
+
+  const handleSubmitReview = async (reviewData) => {
+    await createReview({
+      productId: id,
+      ...reviewData,
+    });
+    await fetchReviews();
+    await checkReviewEligibility();
+  };
+
+  const handleEditReview = async (reviewId, reviewData) => {
+    await updateReview(reviewId, reviewData);
+    await fetchReviews();
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (window.confirm("Are you sure you want to delete this review?")) {
+      await deleteReview(reviewId);
+      await fetchReviews();
+      await checkReviewEligibility();
     }
   };
 
@@ -158,6 +229,51 @@ const ProductDetails = () => {
           )}
         </div>
       </div>
+
+      {/* Reviews Section */}
+      <div className="reviews-section">
+        <div className="reviews-header">
+          <h2>Customer Reviews</h2>
+          {isAuthenticated && (
+            <div className="review-eligibility">
+              {!hasPurchased && (
+                <p className="review-message">
+                  You can only review products you have purchased and received
+                </p>
+              )}
+              {hasReviewed && (
+                <p className="review-message">
+                  You have already reviewed this product
+                </p>
+              )}
+              {canReview && (
+                <button
+                  className="write-review-btn"
+                  onClick={() => setIsReviewModalOpen(true)}
+                >
+                  Write a Review
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        <ReviewList
+          reviews={reviews}
+          averageRating={averageRating}
+          totalReviews={totalReviews}
+          onEdit={handleEditReview}
+          onDelete={handleDeleteReview}
+          currentUser={user}
+        />
+      </div>
+
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSubmit={handleSubmitReview}
+        productName={product?.name}
+      />
     </div>
   );
 };

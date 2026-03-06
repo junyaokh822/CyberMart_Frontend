@@ -58,4 +58,14 @@ export const removeFromWishlist = (productId) =>
 export const checkWishlist = (productId) =>
   API.get(`/wishlist/check/${productId}`);
 
+// Reviews
+export const getProductReviews = (productId) =>
+  API.get(`/reviews/product/${productId}`);
+export const createReview = (reviewData) => API.post("/reviews", reviewData);
+export const updateReview = (reviewId, reviewData) =>
+  API.put(`/reviews/${reviewId}`, reviewData);
+export const deleteReview = (reviewId) => API.delete(`/reviews/${reviewId}`);
+export const checkCanReview = (productId) =>
+  API.get(`/reviews/check-purchase/${productId}`);
+
 export default API;
