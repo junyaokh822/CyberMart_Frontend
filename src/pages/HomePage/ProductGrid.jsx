@@ -1,3 +1,6 @@
+// Home/ProductGrid.jsx
+// Grid wrapper for displaying product cards
+// Renders responsive grid of products
 import React from "react";
 import ProductCard from "./ProductCard";
 

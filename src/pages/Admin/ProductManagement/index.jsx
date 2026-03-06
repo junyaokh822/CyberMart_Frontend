@@ -1,3 +1,6 @@
+// ProductManagement/index.jsx
+// Admin product management dashboard
+// CRUD operations for products with form modal
 import React, { useState, useEffect } from "react";
 import {
   getProducts,
@@ -24,10 +27,12 @@ const ProductManagement = () => {
     inStock: true,
   });
 
+  // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  // Get all products from API
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -41,6 +46,7 @@ const ProductManagement = () => {
     }
   };
 
+  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -49,6 +55,7 @@ const ProductManagement = () => {
     }));
   };
 
+  // Reset form to initial state
   const resetForm = () => {
     setFormData({
       name: "",
@@ -61,6 +68,7 @@ const ProductManagement = () => {
     setEditingProduct(null);
   };
 
+  // Handle form submission (create or update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -81,6 +89,7 @@ const ProductManagement = () => {
     }
   };
 
+  // Populate form for editing
   const handleEdit = (product) => {
     setEditingProduct(product);
     setFormData({
@@ -94,6 +103,7 @@ const ProductManagement = () => {
     setShowForm(true);
   };
 
+  // Delete product with confirmation
   const handleDelete = async (productId) => {
     if (!window.confirm("Are you sure you want to delete this product?")) {
       return;
@@ -109,6 +119,7 @@ const ProductManagement = () => {
     }
   };
 
+  // Show form for new product
   const handleAddNew = () => {
     resetForm();
     setShowForm(true);

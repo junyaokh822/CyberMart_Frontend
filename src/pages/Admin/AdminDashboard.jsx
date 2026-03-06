@@ -1,3 +1,5 @@
+// AdminDashboard.jsx
+// Admin panel with tabbed interface for product and order management
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ProductManagement from "./ProductManagement";

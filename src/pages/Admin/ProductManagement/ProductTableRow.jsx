@@ -1,3 +1,6 @@
+// ProductManagement/ProductTableRow.jsx
+// Product row with edit/delete actions
+// Links to product detail page
 import React from "react";
 import { Link } from "react-router-dom";
 

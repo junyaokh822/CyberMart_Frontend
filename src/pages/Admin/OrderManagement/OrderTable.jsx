@@ -1,3 +1,6 @@
+// OrderManagement/OrderTable.jsx
+// Table wrapper for displaying orders in admin panel
+// Renders individual order rows and handles empty state
 import React from "react";
 import OrderTableRow from "./OrderTableRow";
 

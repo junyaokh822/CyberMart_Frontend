@@ -1,3 +1,6 @@
+// ReviewList.jsx
+// Displays all reviews for a product with edit/delete capabilities
+// Allows users to edit their own reviews with inline form
 import React, { useState } from "react";
 import StarRating from "./StarRating";
 import { useAuth } from "../context/AuthContext";
@@ -11,21 +14,25 @@ const ReviewList = ({
   onDelete,
   currentUser,
 }) => {
+  // State for inline editing
   const [editingReview, setEditingReview] = useState(null);
   const [editComment, setEditComment] = useState("");
   const [editRating, setEditRating] = useState(5);
 
+  // Initialize edit form with review data
   const handleEditClick = (review) => {
     setEditingReview(review._id);
     setEditComment(review.comment);
     setEditRating(review.rating);
   };
 
+  // Submit edited review
   const handleEditSubmit = (reviewId) => {
     onEdit(reviewId, { rating: editRating, comment: editComment });
     setEditingReview(null);
   };
 
+  // Format date for display
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -60,6 +67,7 @@ const ReviewList = ({
           <StarRating rating={review.rating} readonly size="small" />
 
           {editingReview === review._id ? (
+            // Edit mode - inline form
             <div className="edit-review">
               <StarRating
                 rating={editRating}
@@ -79,8 +87,10 @@ const ReviewList = ({
               </div>
             </div>
           ) : (
+            // View mode
             <>
               <p className="review-comment">{review.comment}</p>
+              {/* Show edit/delete buttons only for the review author */}
               {currentUser?._id === review.userId && (
                 <div className="review-actions">
                   <button onClick={() => handleEditClick(review)}>Edit</button>

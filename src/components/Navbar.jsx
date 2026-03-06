@@ -1,3 +1,6 @@
+// Navbar.jsx
+// Main navigation component that conditionally renders links based on auth state
+// Shows different menu items for authenticated users, admins, and guests
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -7,6 +10,7 @@ const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
 
+  // Handle logout and redirect to home
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -27,6 +31,7 @@ const Navbar = () => {
           </Link>
 
           {isAuthenticated ? (
+            // Authenticated user menu
             <>
               <Link to="/profile" className="nav-link">
                 Profile
@@ -40,6 +45,7 @@ const Navbar = () => {
               <Link to="/orders" className="nav-link">
                 Orders
               </Link>
+              {/* Admin-only link */}
               {isAdmin && (
                 <Link to="/admin" className="nav-link admin-link">
                   Admin
@@ -51,6 +57,7 @@ const Navbar = () => {
               </button>
             </>
           ) : (
+            // Guest user menu
             <>
               <Link to="/login" className="nav-link">
                 Login

@@ -1,3 +1,6 @@
+// OrderHistory.jsx
+// User's personal order history page
+// Displays all orders with expandable details and cancel functionality for pending orders
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getOrders, cancelOrder } from "../services/api";
@@ -12,10 +15,12 @@ const OrderHistory = () => {
   const [cancellingId, setCancellingId] = useState(null);
   const { user } = useAuth();
 
+  // Fetch orders on component mount
   useEffect(() => {
     fetchOrders();
   }, []);
 
+  // Get user's order history from API
   const fetchOrders = async () => {
     try {
       setLoading(true);
@@ -34,6 +39,7 @@ const OrderHistory = () => {
     }
   };
 
+  // Handle order cancellation with confirmation
   const handleCancelOrder = async (orderId) => {
     if (!window.confirm("Are you sure you want to cancel this order?")) {
       return;
@@ -62,10 +68,12 @@ const OrderHistory = () => {
     }
   };
 
+  // Toggle expanded view for order details
   const toggleOrderDetails = (orderId) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
   };
 
+  // Get CSS class based on order status
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
@@ -83,6 +91,7 @@ const OrderHistory = () => {
     }
   };
 
+  // Format date for display
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",
@@ -112,6 +121,7 @@ const OrderHistory = () => {
         <div className="orders-list">
           {orders.map((order) => (
             <div key={order._id} className="order-card">
+              {/* Order header - click to expand */}
               <div
                 className="order-header"
                 onClick={() => toggleOrderDetails(order._id)}
@@ -140,6 +150,7 @@ const OrderHistory = () => {
                 </div>
               </div>
 
+              {/* Expanded order details */}
               {expandedOrder === order._id && (
                 <div className="order-details">
                   <div className="order-items">
@@ -192,6 +203,7 @@ const OrderHistory = () => {
                     </div>
                   </div>
 
+                  {/* Cancel button only for pending orders */}
                   {order.status === "pending" && (
                     <div className="order-actions">
                       <button

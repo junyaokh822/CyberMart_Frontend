@@ -1,3 +1,6 @@
+// OrderManagement/OrderTableRow.jsx
+// Individual order row with expandable details
+// Shows customer info, order summary, and status update dropdown
 import React from "react";
 import OrderItemsDetail from "./OrderItemsDetail";
 
@@ -8,6 +11,7 @@ const OrderTableRow = ({
   onStatusChange,
   updating,
 }) => {
+  // Get CSS class based on order status
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
@@ -25,6 +29,7 @@ const OrderTableRow = ({
     }
   };
 
+  // Format date for display
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",

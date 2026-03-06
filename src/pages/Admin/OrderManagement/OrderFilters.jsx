@@ -1,3 +1,6 @@
+// OrderManagement/OrderFilters.jsx
+// Filter dropdown for admin order management
+// Allows filtering orders by status
 import React from "react";
 
 const OrderFilters = ({ filter, onFilterChange }) => {

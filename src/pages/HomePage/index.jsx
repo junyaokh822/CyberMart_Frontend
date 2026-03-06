@@ -1,3 +1,9 @@
+// Home/index.jsx
+// Main product listing page with:
+// - Search by product name
+// - Category filtering
+// - Sorting options
+// - Responsive product grid
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProducts } from "../../services/api";
@@ -18,21 +24,24 @@ const HomePage = () => {
   const [sortBy, setSortBy] = useState("default");
   const navigate = useNavigate();
 
+  // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  // Apply filters and sorting whenever dependencies change
   useEffect(() => {
     filterAndSortProducts();
   }, [searchTerm, selectedCategory, sortBy, products]);
 
+  // Get all products from API
   const fetchProducts = async () => {
     try {
       const { data } = await getProducts();
       setProducts(data);
       setFilteredProducts(data);
 
-      // Extract unique categories
+      // Extract unique categories for filter dropdown
       const uniqueCategories = [...new Set(data.map((p) => p.category))];
       setCategories(uniqueCategories);
     } catch (err) {
@@ -43,6 +52,7 @@ const HomePage = () => {
     }
   };
 
+  // Filter and sort products based on current criteria
   const filterAndSortProducts = () => {
     let filtered = [...products];
 
@@ -83,32 +93,39 @@ const HomePage = () => {
     setFilteredProducts(filtered);
   };
 
+  // Handle search input change
   const handleSearchChange = (value) => {
     setSearchTerm(value);
   };
 
+  // Clear search term
   const handleClearSearch = () => {
     setSearchTerm("");
   };
 
+  // Handle category filter change
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
 
+  // Handle sort option change
   const handleSortChange = (sort) => {
     setSortBy(sort);
   };
 
+  // Clear all filters and reset to default
   const handleClearFilters = () => {
     setSearchTerm("");
     setSelectedCategory("all");
     setSortBy("default");
   };
 
+  // Navigate to product details page
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
   };
 
+  // Check if any filters are active
   const showClearFilters =
     searchTerm || selectedCategory !== "all" || sortBy !== "default";
 

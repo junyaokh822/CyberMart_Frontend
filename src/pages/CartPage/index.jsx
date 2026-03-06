@@ -1,3 +1,7 @@
+// Cart/index.jsx
+// Main shopping cart page
+// Manages cart state, quantity updates, item removal
+// Handles checkout flow with address and payment collection
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -34,6 +38,7 @@ const CartPage = () => {
     paymentMethod: "credit_card",
   });
 
+  // Fetch cart data from API
   const fetchCart = useCallback(async () => {
     try {
       setLoading(true);
@@ -48,12 +53,14 @@ const CartPage = () => {
     }
   }, []);
 
+  // Load cart when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       fetchCart();
     }
   }, [isAuthenticated, fetchCart]);
 
+  // Refresh cart when window gains focus
   useEffect(() => {
     const handleFocus = () => {
       if (isAuthenticated) {
@@ -65,10 +72,12 @@ const CartPage = () => {
     return () => window.removeEventListener("focus", handleFocus);
   }, [isAuthenticated, fetchCart]);
 
+  // Calculate subtotal from cart items
   const calculateSubtotal = (items) => {
     return items.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
+  // Update item quantity
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;
 
@@ -89,6 +98,7 @@ const CartPage = () => {
     }
   };
 
+  // Remove item from cart
   const handleRemoveItem = async (itemId) => {
     setUpdating(true);
     try {
@@ -105,6 +115,7 @@ const CartPage = () => {
     }
   };
 
+  // Clear entire cart with confirmation
   const handleClearCart = async () => {
     if (window.confirm("Are you sure you want to clear your cart?")) {
       setUpdating(true);
@@ -120,11 +131,13 @@ const CartPage = () => {
     }
   };
 
+  // Handle checkout form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCheckoutData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Submit order
   const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
 

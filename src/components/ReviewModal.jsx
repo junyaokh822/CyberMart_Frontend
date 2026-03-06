@@ -1,3 +1,6 @@
+// ReviewModal.jsx
+// Modal form for submitting new product reviews
+// Includes star rating selection and comment textarea
 import React, { useState } from "react";
 import StarRating from "./StarRating";
 import "./ReviewModal.css";
@@ -8,6 +11,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit, productName }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,6 +25,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit, productName }) => {
 
     try {
       await onSubmit({ rating, comment });
+      // Reset form after successful submission
       setRating(5);
       setComment("");
       onClose();

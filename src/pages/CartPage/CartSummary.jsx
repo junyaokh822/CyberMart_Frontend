@@ -1,3 +1,6 @@
+// Cart/CartSummary.jsx
+// Cart summary component displaying totals and checkout actions
+// Shows subtotal, shipping (free), and total
 import React from "react";
 import { Link } from "react-router-dom";
 

@@ -1,3 +1,6 @@
+// OrderManagement/OrderItemsDetail.jsx
+// Displays detailed information about order items and shipping address
+// Used in expanded order view
 import React from "react";
 
 const OrderItemsDetail = ({ items, shippingAddress }) => {

@@ -1,3 +1,7 @@
+// OrderManagement/index.jsx
+// Admin order management dashboard
+// Fetches all orders with filtering by status
+// Allows updating order status and expanding to view details
 import React, { useState, useEffect } from "react";
 import { getAllOrders, updateOrderStatus } from "../../../services/api";
 import OrderFilters from "./OrderFilters";
@@ -12,10 +16,12 @@ const OrderManagement = () => {
   const [filter, setFilter] = useState("all");
   const [expandedOrder, setExpandedOrder] = useState(null);
 
+  // Fetch all orders on component mount
   useEffect(() => {
     fetchOrders();
   }, []);
 
+  // Get all orders from API
   const fetchOrders = async () => {
     try {
       setLoading(true);
@@ -32,6 +38,7 @@ const OrderManagement = () => {
     }
   };
 
+  // Update order status
   const handleStatusUpdate = async (orderId, newStatus) => {
     setUpdating(true);
     try {
@@ -50,14 +57,17 @@ const OrderManagement = () => {
     }
   };
 
+  // Toggle expanded order details
   const toggleOrderDetails = (orderId) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
   };
 
+  // Handle filter change
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
   };
 
+  // Filter orders by status
   const filteredOrders =
     filter === "all"
       ? orders

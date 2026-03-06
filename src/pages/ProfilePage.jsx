@@ -1,3 +1,7 @@
+// ProfilePage.jsx
+// User profile management page
+// Displays user info with edit capability
+// Includes account actions: order history, password change, logout
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -29,10 +33,12 @@ const ProfilePage = () => {
     email: "",
   });
 
+  // Fetch profile data on component mount
   useEffect(() => {
     fetchProfile();
   }, []);
 
+  // Get user profile from API
   const fetchProfile = async () => {
     try {
       setLoading(true);
@@ -57,6 +63,7 @@ const ProfilePage = () => {
     }
   };
 
+  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -65,13 +72,14 @@ const ProfilePage = () => {
     }));
   };
 
+  // Submit profile updates
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setError(null);
 
     try {
-      // update profile
+      // Update profile via API
       const { data } = await updateProfile(formData);
 
       setProfileData({
@@ -94,6 +102,7 @@ const ProfilePage = () => {
     }
   };
 
+  // Cancel editing and revert changes
   const handleCancel = () => {
     setFormData({
       firstName: profileData.firstName,
@@ -104,6 +113,7 @@ const ProfilePage = () => {
     setError(null);
   };
 
+  // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const options = { year: "numeric", month: "long", day: "numeric" };

@@ -1,3 +1,6 @@
+// Home/NoResults.jsx
+// Empty state component when no products match filters
+// Provides button to clear filters
 import React from "react";
 
 const NoResults = ({ onClearFilters }) => {

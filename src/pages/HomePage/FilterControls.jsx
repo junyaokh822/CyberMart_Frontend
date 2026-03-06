@@ -1,3 +1,6 @@
+// Home/FilterControls.jsx
+// Filter and sort controls for product listing
+// Allows category filtering, sorting options, and clearing filters
 import React from "react";
 
 const FilterControls = ({

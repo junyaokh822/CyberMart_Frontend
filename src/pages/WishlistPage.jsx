@@ -1,3 +1,7 @@
+// WishlistPage.jsx
+// User's wishlist display page
+// Handles unavailable products gracefully with visual indicators
+// Allows adding to cart and removing from wishlist
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getWishlist, removeFromWishlist, addToCart } from "../services/api";
@@ -10,10 +14,12 @@ const WishlistPage = () => {
   const [updating, setUpdating] = useState(false);
   const navigate = useNavigate();
 
+  // Fetch wishlist on component mount
   useEffect(() => {
     fetchWishlist();
   }, []);
 
+  // Get user's wishlist from API
   const fetchWishlist = async () => {
     try {
       setLoading(true);
@@ -27,6 +33,7 @@ const WishlistPage = () => {
     }
   };
 
+  // Remove item from wishlist
   const handleRemove = async (id) => {
     setUpdating(true);
     try {
@@ -39,6 +46,7 @@ const WishlistPage = () => {
     }
   };
 
+  // Add item to cart from wishlist
   const handleAddToCart = async (productId) => {
     setUpdating(true);
     try {
@@ -54,6 +62,7 @@ const WishlistPage = () => {
   if (loading) return <div className="loading">Loading wishlist...</div>;
   if (error) return <div className="error">{error}</div>;
 
+  // Separate available and unavailable items
   const availableItems =
     wishlist?.items?.filter(
       (item) =>
@@ -102,6 +111,7 @@ const WishlistPage = () => {
 
           <div className="wishlist-grid">
             {wishlist.items.map((item) => {
+              // Determine product ID and availability
               const productId =
                 item.productId?._id ||
                 (typeof item.productId === "string" ? item.productId : null);

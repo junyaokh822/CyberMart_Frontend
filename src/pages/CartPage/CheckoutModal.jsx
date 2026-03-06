@@ -1,3 +1,6 @@
+// Cart/CheckoutModal.jsx
+// Checkout form modal for collecting shipping and payment information
+// Displays order summary and handles form submission
 import React from "react";
 import "./CheckoutModal.css";
 

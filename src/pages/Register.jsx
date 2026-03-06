@@ -1,3 +1,6 @@
+// Register.jsx
+// New user registration form
+// Handles account creation and automatic login after successful registration
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
@@ -16,6 +19,7 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Handle form input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -23,9 +27,11 @@ const Register = () => {
     });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;

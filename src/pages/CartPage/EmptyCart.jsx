@@ -1,3 +1,6 @@
+// Cart/EmptyCart.jsx
+// Empty cart state component
+// Displays message and link to continue shopping
 import React from "react";
 import { Link } from "react-router-dom";
 

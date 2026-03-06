@@ -1,3 +1,6 @@
+// ProductManagement/ProductTable.jsx
+// Table wrapper for displaying products in admin panel
+// Renders individual product rows and handles empty state
 import React from "react";
 import ProductTableRow from "./ProductTableRow";
 

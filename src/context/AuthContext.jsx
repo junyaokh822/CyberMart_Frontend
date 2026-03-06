@@ -1,3 +1,6 @@
+// AuthContext.jsx
+// Global authentication context provider
+// Manages user state, token persistence, and auth operations (login/register/logout)
 import { createContext, useState, useEffect, useContext } from "react";
 import {
   login as loginApi,
@@ -14,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  // Load user data when token exists
   useEffect(() => {
     if (token) {
       loadUser();
@@ -22,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  // Fetch user profile from API
   const loadUser = async () => {
     try {
       const { data } = await getProfile();
@@ -34,6 +39,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Login user and store token
   const login = async (email, password) => {
     const { data } = await loginApi({ email, password });
     localStorage.setItem("token", data.token);
@@ -42,6 +48,7 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  // Register new user and store token
   const register = async (userData) => {
     const { data } = await registerApi(userData);
     localStorage.setItem("token", data.token);
@@ -50,12 +57,14 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  // Logout user and clear token
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
   };
 
+  // Context value with auth state and methods
   const value = {
     user,
     loading,

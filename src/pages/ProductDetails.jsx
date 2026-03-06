@@ -1,3 +1,9 @@
+// ProductDetails.jsx
+// Detailed product view with:
+// - Product info and image
+// - Quantity selector and add to cart/buy now actions
+// - Customer reviews section with CRUD operations
+// - Review eligibility checking based on purchase history
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getProduct, addToCart } from "../services/api";
@@ -35,17 +41,20 @@ const ProductDetails = () => {
   const [hasReviewed, setHasReviewed] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
+  // Fetch product and reviews on mount or when product ID changes
   useEffect(() => {
     fetchProduct();
     fetchReviews();
   }, [id]);
 
+  // Check if user can review this product
   useEffect(() => {
     if (isAuthenticated) {
       checkReviewEligibility();
     }
   }, [id, isAuthenticated]);
 
+  // Fetch product details from API
   const fetchProduct = async () => {
     try {
       setLoading(true);
@@ -59,6 +68,7 @@ const ProductDetails = () => {
     }
   };
 
+  // Fetch product reviews
   const fetchReviews = async () => {
     try {
       const { data } = await getProductReviews(id);
@@ -70,6 +80,7 @@ const ProductDetails = () => {
     }
   };
 
+  // Check if user can review (purchased and not already reviewed)
   const checkReviewEligibility = async () => {
     if (!isAuthenticated) return;
 
@@ -83,6 +94,7 @@ const ProductDetails = () => {
     }
   };
 
+  // Add product to cart
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -101,6 +113,7 @@ const ProductDetails = () => {
     }
   };
 
+  // Buy now - add to cart and go to cart page
   const handleBuyNow = async () => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -117,6 +130,7 @@ const ProductDetails = () => {
     }
   };
 
+  // Submit a new review
   const handleSubmitReview = async (reviewData) => {
     await createReview({
       productId: id,
@@ -126,11 +140,13 @@ const ProductDetails = () => {
     await checkReviewEligibility();
   };
 
+  // Edit an existing review
   const handleEditReview = async (reviewId, reviewData) => {
     await updateReview(reviewId, reviewData);
     await fetchReviews();
   };
 
+  // Delete a review
   const handleDeleteReview = async (reviewId) => {
     if (window.confirm("Are you sure you want to delete this review?")) {
       await deleteReview(reviewId);

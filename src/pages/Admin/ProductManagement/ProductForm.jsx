@@ -1,3 +1,6 @@
+// ProductManagement/ProductForm.jsx
+// Modal form for creating/editing products
+// Handles all product fields with validation
 import React from "react";
 
 const ProductForm = ({

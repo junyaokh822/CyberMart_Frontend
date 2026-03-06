@@ -1,3 +1,6 @@
+// StarRating.jsx
+// Reusable star rating component with half-star support
+// Can be used for display (readonly) or interactive rating selection
 import React from "react";
 import "./StarRating.css";
 
@@ -9,7 +12,7 @@ const StarRating = ({
 }) => {
   const stars = [1, 2, 3, 4, 5];
 
-  // Function to determine if star should be full, half, or empty
+  // Determine if star should be full, half, or empty based on rating
   const getStarClass = (star) => {
     if (rating >= star) {
       return "filled";

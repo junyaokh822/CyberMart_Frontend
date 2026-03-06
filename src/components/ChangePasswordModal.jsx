@@ -1,8 +1,12 @@
+// ChangePasswordModal.jsx
+// Modal component for authenticated users to change their password
+// Handles form validation, API calls, and success/error states
 import React, { useState } from "react";
 import { changePassword } from "../services/api";
 import "./ChangePasswordModal.css";
 
 const ChangePasswordModal = ({ isOpen, onClose }) => {
+  // Form state management
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -12,6 +16,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Handle input changes and clear messages
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -23,6 +28,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     setSuccess("");
   };
 
+  // Handle form submission with validation
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -43,6 +49,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     setSuccess("");
 
     try {
+      // API call to change password
       await changePassword({
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword,
@@ -69,6 +76,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // Handle modal close with form reset
   const handleClose = () => {
     setFormData({
       currentPassword: "",

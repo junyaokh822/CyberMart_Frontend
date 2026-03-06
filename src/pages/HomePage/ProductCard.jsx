@@ -1,3 +1,8 @@
+// Home/ProductCard.jsx
+// Product card component with:
+// - Wishlist toggle functionality
+// - Quick view link
+// - Price display
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -12,12 +17,14 @@ const ProductCard = ({ product, onClick }) => {
   const [inWishlist, setInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
 
+  // Check if product is in user's wishlist
   useEffect(() => {
     if (isAuthenticated) {
       checkWishlistStatus();
     }
   }, [isAuthenticated, product._id]);
 
+  // Check wishlist status from API
   const checkWishlistStatus = async () => {
     try {
       const { data } = await checkWishlist(product._id);
@@ -27,11 +34,11 @@ const ProductCard = ({ product, onClick }) => {
     }
   };
 
+  // Toggle wishlist status
   const handleWishlistClick = async (e) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      // redirect to login or show a message
       alert("Please login to add items to wishlist");
       return;
     }

@@ -1,3 +1,6 @@
+// Home/SearchBar.jsx
+// Search input component with clear button
+// Filters products by name
 import React from "react";
 
 const SearchBar = ({ searchTerm, onSearchChange, onClear }) => {

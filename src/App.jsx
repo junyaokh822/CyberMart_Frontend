@@ -1,3 +1,6 @@
+// App.jsx
+// Main application component with routing configuration
+// Sets up public, protected, and admin routes with appropriate guards
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -17,15 +20,19 @@ import "./App.css";
 function App() {
   return (
     <div className="app">
+      {/* Global navigation bar */}
       <Navbar />
+
+      {/* Main content area with routing */}
       <main className="main-content">
         <Routes>
+          {/* Public routes - accessible to everyone */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/product/:id" element={<ProductDetails />} />
 
-          {/* Protected Routes */}
+          {/* Protected Routes - require authentication */}
           <Route
             path="/profile"
             element={
@@ -62,7 +69,7 @@ function App() {
             }
           />
 
-          {/* Admin Routes */}
+          {/* Admin Routes - require authentication AND admin role */}
           <Route
             path="/admin"
             element={

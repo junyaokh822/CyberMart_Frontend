@@ -1,3 +1,6 @@
+// Cart/CartItem.jsx
+// Individual cart item component
+// Displays product image, details, quantity controls, and remove button
 import React from "react";
 import { Link } from "react-router-dom";
 
