@@ -254,3 +254,13 @@
     width: 100%;
   }
 }
+
+.payment-details {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.back-to-methods-btn:hover {
+  text-decoration: underline;
+}

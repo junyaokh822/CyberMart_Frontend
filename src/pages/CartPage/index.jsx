@@ -137,9 +137,11 @@ const CartPage = () => {
     setCheckoutData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submit order
-  const handleCheckoutSubmit = async (e) => {
+  const handleCheckoutSubmit = async (e, paymentDetails) => {
+    // Added parameter
     e.preventDefault();
+
+    console.log("Payment Details received:", paymentDetails);
 
     setCheckoutLoading(true);
     try {
@@ -152,6 +154,7 @@ const CartPage = () => {
           country: checkoutData.country,
         },
         paymentMethod: checkoutData.paymentMethod,
+        paymentDetails: paymentDetails,
       });
 
       setCart((prevCart) => ({ ...prevCart, items: [] }));
@@ -162,7 +165,7 @@ const CartPage = () => {
         state: "",
         zipCode: "",
         country: "USA",
-        paymentMethod: "credit_card",
+        paymentMethod: "",
       });
 
       alert("Order placed successfully!");
