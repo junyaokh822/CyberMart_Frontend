@@ -3,25 +3,40 @@
 // - Search by product name
 // - Category filtering
 // - Sorting options
+// - Pagination with page navigation
 // - Responsive product grid
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getProducts } from "../../services/api";
 import SearchBar from "./SearchBar";
 import FilterControls from "./FilterControls";
 import ProductGrid from "./ProductGrid";
 import NoResults from "./NoResults";
+import Pagination from "./Pagination";
 import "./HomePage.css";
 
 const HomePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || "",
+  );
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category") || "all",
+  );
   const [categories, setCategories] = useState([]);
-  const [sortBy, setSortBy] = useState("default");
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "default");
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page")) || 1,
+  );
+  const [itemsPerPage] = useState(12); // Show 12 products per page
+  const [totalPages, setTotalPages] = useState(1);
+
   const navigate = useNavigate();
 
   // Fetch products on component mount
@@ -29,10 +44,26 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-  // Apply filters and sorting whenever dependencies change
+  // Apply filters, sorting, and pagination whenever dependencies change
   useEffect(() => {
     filterAndSortProducts();
   }, [searchTerm, selectedCategory, sortBy, products]);
+
+  // Update URL params when filters change
+  useEffect(() => {
+    const params = {};
+    if (searchTerm) params.search = searchTerm;
+    if (selectedCategory !== "all") params.category = selectedCategory;
+    if (sortBy !== "default") params.sort = sortBy;
+    if (currentPage > 1) params.page = currentPage;
+
+    setSearchParams(params);
+  }, [searchTerm, selectedCategory, sortBy, currentPage, setSearchParams]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, sortBy]);
 
   // Get all products from API
   const fetchProducts = async () => {
@@ -91,6 +122,21 @@ const HomePage = () => {
     }
 
     setFilteredProducts(filtered);
+    setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+  };
+
+  // Get current page products
+  const getCurrentPageProducts = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredProducts.slice(startIndex, endIndex);
+  };
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Handle search input change
@@ -118,6 +164,7 @@ const HomePage = () => {
     setSearchTerm("");
     setSelectedCategory("all");
     setSortBy("default");
+    setCurrentPage(1);
   };
 
   // Navigate to product details page
@@ -131,6 +178,8 @@ const HomePage = () => {
 
   if (loading) return <div className="loading">Loading products...</div>;
   if (error) return <div className="error">{error}</div>;
+
+  const currentProducts = getCurrentPageProducts();
 
   return (
     <div className="home-page">
@@ -157,18 +206,29 @@ const HomePage = () => {
 
       {/* Results count */}
       <div className="results-count">
-        {filteredProducts.length} product
-        {filteredProducts.length !== 1 ? "s" : ""} found
+        Showing {currentProducts.length} of {filteredProducts.length} product
+        {filteredProducts.length !== 1 ? "s" : ""}
       </div>
 
       {/* Products Grid or No Results */}
       {filteredProducts.length === 0 ? (
         <NoResults onClearFilters={handleClearFilters} />
       ) : (
-        <ProductGrid
-          products={filteredProducts}
-          onProductClick={handleProductClick}
-        />
+        <>
+          <ProductGrid
+            products={currentProducts}
+            onProductClick={handleProductClick}
+          />
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
       )}
     </div>
   );
