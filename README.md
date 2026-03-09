@@ -34,6 +34,23 @@ A full-stack e-commerce web application built with React and Node.js, featuring 
 - Star rating system with half-star support
 - Edit and delete your own reviews
 
+### 📄 Pagination
+
+- Shared `Pagination` component reused across the product listing page and the admin product management dashboard
+- Product listing: 12 products per page; admin dashboard: 10 products per page
+- Previous/Next navigation buttons
+- Page number buttons with smart ellipsis (shows nearby pages, collapses distant ones)
+- Jump-to-page input for direct navigation
+- URL sync on the main listing — page state is preserved in query params and survives refresh
+- Auto-resets to page 1 when search, category, or sort filters change, or after admin CRUD operations
+
+### 🔝 Go To Top Button
+
+- Fixed button appears after scrolling 300px down
+- Smooth scroll back to the top of the page
+- Circular scroll progress indicator shows how far down the page you are
+- Responsive sizing across desktop, tablet, and mobile
+
 ### 🔐 Admin Dashboard
 
 - Manage products (create, edit, delete)
@@ -121,12 +138,14 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 CyberMart_Frontend/
 ├── src/
 │   ├── components/       # Reusable UI components
+│   │   ├── GoToTop/      # Scroll progress + back-to-top button
 │   ├── context/          # Auth context
 │   ├── pages/            # Page components
-│   │   ├── Admin/        # Admin dashboard
+│   │   ├── Admin/
+│   │   │   └── ProductManagement/  # Reuses HomePage/Pagination.jsx
 │   │   ├── CartPage/     # Cart & checkout
 │   │   ├── HomePage/     # Product listing
-│   │   └── ...
+│   │   │   ├── Pagination.jsx      # Shared pagination component
 │   └── services/         # API calls (api.jsx)
 ```
 

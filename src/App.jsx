@@ -15,6 +15,7 @@ import WishlistPage from "./pages/WishlistPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
+import GoToTop from "./components/GoToTop";
 import "./App.css";
 
 function App() {
@@ -22,6 +23,9 @@ function App() {
     <div className="app">
       {/* Global navigation bar */}
       <Navbar />
+
+      {/* Go to top button - appears on all pages */}
+      <GoToTop />
 
       {/* Main content area with routing */}
       <main className="main-content">

@@ -1,6 +1,6 @@
-// ProductManagement/index.jsx
+// Admin/ProductManagement/index.jsx
 // Admin product management dashboard
-// CRUD operations for products with form modal
+// CRUD operations for products with pagination
 import React, { useState, useEffect } from "react";
 import {
   getProducts,
@@ -10,6 +10,7 @@ import {
 } from "../../../services/api";
 import ProductTable from "./ProductTable";
 import ProductForm from "./ProductForm";
+import Pagination from "../../HomePage/Pagination";
 import "./ProductManagement.css";
 
 const ProductManagement = () => {
@@ -18,6 +19,12 @@ const ProductManagement = () => {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Show 10 products per page in admin
+  const [totalPages, setTotalPages] = useState(1);
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -32,18 +39,41 @@ const ProductManagement = () => {
     fetchProducts();
   }, []);
 
+  // Reset to page 1 when products change (after CRUD operations)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [products.length]);
+
   // Get all products from API
   const fetchProducts = async () => {
     try {
       setLoading(true);
       const { data } = await getProducts();
       setProducts(data);
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
     } catch (err) {
       setError("Failed to load products");
       console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Get current page products
+  const getCurrentPageProducts = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return products.slice(startIndex, endIndex);
+  };
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Scroll to top of table when page changes
+    document.querySelector(".products-table")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   // Handle form input changes
@@ -82,7 +112,7 @@ const ProductManagement = () => {
 
       setShowForm(false);
       resetForm();
-      fetchProducts();
+      await fetchProducts(); // Refresh the list
     } catch (err) {
       alert("Failed to save product");
       console.error(err);
@@ -112,7 +142,14 @@ const ProductManagement = () => {
     try {
       await deleteProduct(productId);
       alert("Product deleted successfully!");
-      fetchProducts();
+
+      // After deletion, check if current page becomes empty and adjust
+      const newTotalPages = Math.ceil((products.length - 1) / itemsPerPage);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+
+      await fetchProducts();
     } catch (err) {
       alert("Failed to delete product");
       console.error(err);
@@ -127,6 +164,8 @@ const ProductManagement = () => {
 
   if (loading) return <div className="loading">Loading products...</div>;
   if (error) return <div className="error">{error}</div>;
+
+  const currentProducts = getCurrentPageProducts();
 
   return (
     <div className="product-management">
@@ -146,11 +185,27 @@ const ProductManagement = () => {
         isEditing={!!editingProduct}
       />
 
+      {/* Results count */}
+      <div className="admin-results-count">
+        Showing {currentProducts.length} of {products.length} products
+      </div>
+
       <ProductTable
-        products={products}
+        products={currentProducts}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="admin-pagination-container">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   );
 };

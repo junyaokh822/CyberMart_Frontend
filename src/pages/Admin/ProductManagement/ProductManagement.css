@@ -275,3 +275,34 @@ td {
   object-fit: contain;
   transition: transform 0.2s;
 }
+
+.admin-results-count {
+  text-align: right;
+  color: #666;
+  margin: 20px 0 15px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0 10px;
+}
+
+.admin-pagination-container {
+  margin-top: 30px;
+  padding: 20px 0;
+  border-top: 2px solid #f0f0f0;
+}
+
+.admin-pagination-container .pagination {
+  margin-top: 0;
+  padding: 0;
+  border-top: none;
+}
+
+@media (max-width: 768px) {
+  .admin-results-count {
+    text-align: center;
+  }
+
+  .admin-pagination-container {
+    padding: 15px 0;
+  }
+}
