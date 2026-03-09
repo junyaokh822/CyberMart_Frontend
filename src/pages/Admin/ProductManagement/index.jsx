@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import {
   getProducts,
+  getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -120,17 +121,26 @@ const ProductManagement = () => {
   };
 
   // Populate form for editing
-  const handleEdit = (product) => {
-    setEditingProduct(product);
-    setFormData({
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      category: product.category,
-      imageUrl: product.imageUrl,
-      inStock: product.inStock,
-    });
-    setShowForm(true);
+  const handleEdit = async (product) => {
+    try {
+      // Fetch the full product details including description
+      const { data: fullProduct } = await getProduct(product._id);
+      console.log("Full product details:", fullProduct);
+
+      setEditingProduct(fullProduct);
+      setFormData({
+        name: fullProduct.name || "",
+        description: fullProduct.description || "",
+        price: fullProduct.price || "",
+        category: fullProduct.category || "",
+        imageUrl: fullProduct.imageUrl || "",
+        inStock: fullProduct.inStock !== undefined ? fullProduct.inStock : true,
+      });
+      setShowForm(true);
+    } catch (error) {
+      console.error("Failed to fetch product details:", error);
+      alert("Failed to load product details for editing");
+    }
   };
 
   // Delete product with confirmation
