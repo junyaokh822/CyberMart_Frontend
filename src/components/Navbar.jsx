@@ -1,7 +1,8 @@
 // Navbar.jsx
-// Main navigation component that conditionally renders links based on auth state
-// Shows different menu items for authenticated users, admins, and guests
-import React from "react";
+// Top navigation bar shown on all pages
+// Shows different links based on auth state (guest vs user vs admin)
+// Collapses into hamburger menu on small screens
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
@@ -9,45 +10,71 @@ import "./Navbar.css";
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Handle logout and redirect to home
   const handleLogout = () => {
     logout();
     navigate("/");
+    setMenuOpen(false);
+  };
+
+  const handleLinkClick = () => {
+    setMenuOpen(false);
   };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
+        <Link to="/" className="nav-logo" onClick={handleLinkClick}>
           CyberMart
         </Link>
 
         <div className="nav-spacer"></div>
 
-        <div className="nav-links">
-          <Link to="/" className="nav-link">
+        {/* Hamburger button - only visible on small screens */}
+        <button
+          className={`hamburger ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+          <Link to="/" className="nav-link" onClick={handleLinkClick}>
             Home
           </Link>
 
           {isAuthenticated ? (
-            // Authenticated user menu
             <>
-              <Link to="/profile" className="nav-link">
+              <Link
+                to="/profile"
+                className="nav-link"
+                onClick={handleLinkClick}
+              >
                 Profile
               </Link>
-              <Link to="/wishlist" className="nav-link">
+              <Link
+                to="/wishlist"
+                className="nav-link"
+                onClick={handleLinkClick}
+              >
                 Wishlist
               </Link>
-              <Link to="/cart" className="nav-link">
+              <Link to="/cart" className="nav-link" onClick={handleLinkClick}>
                 Cart
               </Link>
-              <Link to="/orders" className="nav-link">
+              <Link to="/orders" className="nav-link" onClick={handleLinkClick}>
                 Orders
               </Link>
-              {/* Admin-only link */}
               {isAdmin && (
-                <Link to="/admin" className="nav-link admin-link">
+                <Link
+                  to="/admin"
+                  className="nav-link admin-link"
+                  onClick={handleLinkClick}
+                >
                   Admin
                 </Link>
               )}
@@ -57,12 +84,15 @@ const Navbar = () => {
               </button>
             </>
           ) : (
-            // Guest user menu
             <>
-              <Link to="/login" className="nav-link">
+              <Link to="/login" className="nav-link" onClick={handleLinkClick}>
                 Login
               </Link>
-              <Link to="/register" className="nav-link">
+              <Link
+                to="/register"
+                className="nav-link"
+                onClick={handleLinkClick}
+              >
                 Register
               </Link>
             </>
