@@ -10,7 +10,7 @@ import ChangePasswordModal from "../components/ChangePasswordModal";
 import "./ProfilePage.css";
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loadUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -81,6 +81,8 @@ const ProfilePage = () => {
     try {
       // Update profile via API
       const { data } = await updateProfile(formData);
+
+      await loadUser();
 
       setProfileData({
         firstName: data.firstName,
