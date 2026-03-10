@@ -27,6 +27,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const MAX_QUANTITY = 1000;
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
   const [buyingNow, setBuyingNow] = useState(false);
@@ -207,13 +208,22 @@ const ProductDetails = () => {
                     id="quantity"
                     value={quantity}
                     onChange={(e) =>
-                      setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+                      setQuantity(
+                        Math.min(
+                          MAX_QUANTITY,
+                          Math.max(1, parseInt(e.target.value) || 1),
+                        ),
+                      )
                     }
                     min="1"
+                    max={MAX_QUANTITY}
                   />
                   <button
-                    onClick={() => setQuantity((q) => q + 1)}
+                    onClick={() =>
+                      setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))
+                    }
                     className="quantity-btn"
+                    disabled={quantity >= MAX_QUANTITY}
                   >
                     +
                   </button>
