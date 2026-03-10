@@ -264,9 +264,20 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .home-page {
+    padding: 20px 15px;
+  }
+
   .search-filter-bar {
     flex-direction: column;
     align-items: stretch;
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .search-box {
+    min-width: 0;
+    width: 100%;
   }
 
   .filter-controls {
@@ -275,6 +286,7 @@ body {
   }
 
   .filter-select {
+    min-width: 0;
     width: 100%;
   }
 
