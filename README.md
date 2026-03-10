@@ -2,7 +2,7 @@
 
 A full-stack e-commerce web application built with React and Node.js, featuring a complete shopping experience from product browsing to order management.
 
-🌐 **Live Demo:** [https://cybermart-frontend.onrender.com](https://cybermart-frontend.onrender.com)
+🌐 **Live Demo:** [https://cybermart-frontend.onrender.com](https://cybermart-frontend.onrender.com)  
 🔗 **Backend Repo:** [CyberMart_Backend](https://github.com/junyaokh822/CyberMart_Backend)
 
 ---
