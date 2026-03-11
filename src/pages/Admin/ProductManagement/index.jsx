@@ -197,7 +197,9 @@ const ProductManagement = () => {
 
       {/* Results count */}
       <div className="admin-results-count">
-        Showing {currentProducts.length} of {products.length} products
+        {products.length === 0
+          ? "No products found"
+          : `Showing ${(currentPage - 1) * itemsPerPage + 1} – ${Math.min(currentPage * itemsPerPage, products.length)} of ${products.length} products`}
       </div>
 
       <ProductTable

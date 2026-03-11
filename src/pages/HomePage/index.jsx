@@ -206,8 +206,9 @@ const HomePage = () => {
 
       {/* Results count */}
       <div className="results-count">
-        Showing {currentProducts.length} of {filteredProducts.length} product
-        {filteredProducts.length !== 1 ? "s" : ""}
+        {filteredProducts.length === 0
+          ? "No products found"
+          : `Showing ${(currentPage - 1) * itemsPerPage + 1} – ${Math.min(currentPage * itemsPerPage, filteredProducts.length)} of ${filteredProducts.length} product${filteredProducts.length !== 1 ? "s" : ""}`}
       </div>
 
       {/* Products Grid or No Results */}
